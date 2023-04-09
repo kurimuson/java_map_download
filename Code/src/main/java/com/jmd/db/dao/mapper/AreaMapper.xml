@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jmd.db.dao.AreaDao">
+
+    <resultMap id="areaResultMap" type="com.jmd.entity.district.Area">
+        <result property="id" column="id"/>
+        <result property="adcode" column="adcode"/>
+        <result property="polyline" column="polyline"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.jmd.entity.district.Area">
+        INSERT INTO
+        tb_area(adcode, polyline)
+        VALUES (#{adcode}, #{polyline})
+    </insert>
+
+    <select id="isExist" resultType="java.lang.Integer">
+        SELECT count() FROM tb_area
+        WHERE adcode=#{adcode}
+    </select>
+
+    <select id="getByAdcode" resultMap="areaResultMap">
+        SELECT * FROM tb_area
+        WHERE adcode=#{adcode}
+    </select>
+
+</mapper>

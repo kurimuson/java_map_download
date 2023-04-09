@@ -1,0 +1,79 @@
+logging:
+  level:
+    root: info
+  file:
+    path: ./log
+    
+spring:
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:sqlite::resource:db.sqlite3
+    druid:
+      initial-size: 5
+      max-active: 20
+      min-idle: 5
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000 #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      min-evictable-idle-time-millis: 300000 #配置一个连接在池中最小生存的时间，单位是毫秒
+      validation-query: SELECT 'x' #用来检测连接是否有效的sql，要求是一个查询语句
+      test-while-idle: true #申请连接的时候检测
+      test-on-borrow: false #申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能
+      test-on-return: false #归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能
+
+mybatis:
+  mapper-locations: classpath*:com/jmd/db/dao/mapper/*Mapper.xml
+
+okhttp:
+  connect-timeout: 5000
+  read-timeout: 5000
+  write-timeout: 5000
+  max-idle-connections: 1024
+  keep-alive-duration: 5000
+  osm:
+    connect-timeout: 10000
+    read-timeout: 10000
+    write-timeout: 10000
+    max-idle-connections: 1024
+    keep-alive-duration: 5000
+  tian:
+    connect-timeout: 2500
+    read-timeout: 2500
+    write-timeout: 2500
+    max-idle-connections: 1024
+    keep-alive-duration: 5000
+  google:
+    connect-timeout: 5000
+    read-timeout: 5000
+    write-timeout: 5000
+    max-idle-connections: 1024
+    keep-alive-duration: 5000
+  amap:
+    connect-timeout: 2500
+    read-timeout: 2500
+    write-timeout: 2500
+    max-idle-connections: 1024
+    keep-alive-duration: 5000
+  tencent:
+    connect-timeout: 2500
+    read-timeout: 2500
+    write-timeout: 2500
+    max-idle-connections: 1024
+    keep-alive-duration: 5000
+  bing:
+    connect-timeout: 3500
+    read-timeout: 3500
+    write-timeout: 3500
+    max-idle-connections: 1024
+    keep-alive-duration: 5000
+  
+tile:
+  block-divide: 289
+  
+download:
+  retry: 1
+
+pool:
+  thread:
+    tile-calculation: 12
+    tile-download: 256  

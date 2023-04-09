@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jmd.db.dao.CityDao">
+
+    <resultMap id="cityResultMap" type="com.jmd.entity.district.City">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="center" column="center"/>
+        <result property="citycode" column="citycode"/>
+        <result property="adcode" column="adcode"/>
+        <result property="padcode" column="padcode"/>
+    </resultMap>
+
+    <select id="queryAll" resultMap="cityResultMap">
+        SELECT * FROM tb_city
+    </select>
+
+    <select id="queryByPadcode" resultMap="cityResultMap">
+        SELECT * FROM tb_city WHERE padcode=#{padcode}
+    </select>
+
+</mapper>

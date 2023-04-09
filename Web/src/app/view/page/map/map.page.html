@@ -1,0 +1,42 @@
+<!-- 地图 -->
+<div class='map' #map></div>
+<!-- ZOOM -->
+<div class='zoom'>Zoom:&nbsp;{{ zoom }}</div>
+<div class='right-top'>
+	<!-- 更改key -->
+	<div class='btn' #changeKeyDiv>
+		<button nz-button nzSize='small' nzType='primary' (click)='openChangeKeyModal()'>更换Key</button>
+	</div>
+	<!-- 刷新 -->
+	<div class='btn'>
+		<button nz-button nzSize='small' nzType='primary' (click)='reload()'>刷新</button>
+	</div>
+	<!-- 地图类型 -->
+	<div class='btn'>
+		<button nz-button nzSize='small' nzType='default'>
+			{{ mapType }}
+		</button>
+	</div>
+</div>
+<div class='right-bottom'>
+	<!-- 坐标类型 -->
+	<div class='btn'>
+		<button nz-button nzSize='small' nzType='default'>
+			坐标类型：{{ coordinateType }}
+		</button>
+	</div>
+</div>
+<!-- 更换Key -->
+<nz-modal [nzVisible]='isChangeKeyModalVisible' nzTitle='更换Key' (nzOnCancel)='closeChangeKeyModal()'
+		  (nzOnOk)='changeKey()'>
+	<ng-container *nzModalContent>
+		<form nz-form [formGroup]='validateForm'>
+			<nz-form-item>
+				<nz-form-label [nzSpan]='6' nzRequired>Key</nz-form-label>
+				<nz-form-control [nzSpan]='14' nzErrorTip='请输入Key'>
+					<input nz-input formControlName='key' placeholder='请输入Key'/>
+				</nz-form-control>
+			</nz-form-item>
+		</form>
+	</ng-container>
+</nz-modal>
