@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
 
-	production: boolean = environment.production;
+	private readonly production: boolean = environment.production;
 
 	constructor() {
 	}

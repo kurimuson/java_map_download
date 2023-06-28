@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.jmd.entity.task.TaskAllInfoEntity;
-import com.jmd.entity.task.TaskBlockDivide;
+import com.jmd.model.task.TaskAllInfoEntity;
+import com.jmd.model.task.TaskBlockDivide;
 
 public class TaskUtils {
 
     public static TaskAllInfoEntity getExistTaskByPath(String path) {
         TaskAllInfoEntity taskAllInfo = null;
         try {
-            taskAllInfo = (TaskAllInfoEntity) CommonUtils.readFile2Obj(path + "/task_info.jmd");
+            taskAllInfo = (TaskAllInfoEntity) MyFileUtils.readFile2Obj(path + "/task_info.jmd");
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             return null;
@@ -23,7 +23,7 @@ public class TaskUtils {
     public static TaskAllInfoEntity getExistTaskByFile(File file) {
         TaskAllInfoEntity taskAllInfo = null;
         try {
-            taskAllInfo = (TaskAllInfoEntity) CommonUtils.readFile2Obj(file);
+            taskAllInfo = (TaskAllInfoEntity) MyFileUtils.readFile2Obj(file);
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
             return null;

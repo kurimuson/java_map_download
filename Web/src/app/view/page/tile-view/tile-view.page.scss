@@ -1,0 +1,15 @@
+.map {
+	width: 100%;
+	height: 100%;
+}
+
+.right-top {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+
+	.block {
+		float: left;
+		margin-left: 8px;
+	}
+}

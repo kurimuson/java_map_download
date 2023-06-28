@@ -1,6 +1,6 @@
 package com.jmd.callback;
 
-import com.jmd.entity.task.MergeProgressEntity;
+import com.jmd.model.task.MergeProgressEntity;
 
 public interface TileMergeMonitoringCallback {
 

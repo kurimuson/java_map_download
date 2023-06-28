@@ -1,0 +1,16 @@
+<!-- 地图 -->
+<div class='map' #map></div>
+<div class='right-top'>
+	<!-- 网格 -->
+	<div class='block'>
+		<button mat-raised-button (click)="gridOpenClose()">
+			{{ gridOpen ? '关闭' : '开启' }}网格
+		</button>
+	</div>
+	<!-- ZOOM -->
+	<div class='block'>
+		<button mat-raised-button>
+			Zoom:&nbsp;{{ zoom }}
+		</button>
+	</div>
+</div>

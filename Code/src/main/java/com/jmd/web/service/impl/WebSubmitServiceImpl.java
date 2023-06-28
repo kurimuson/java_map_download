@@ -10,9 +10,9 @@ import com.jmd.ui.common.CommonDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jmd.entity.controller.WebDownloadSubmitVo;
-import com.jmd.entity.geo.MercatorPoint;
-import com.jmd.entity.geo.Polygon;
+import com.jmd.model.controller.WebDownloadSubmitVo;
+import com.jmd.model.geo.MercatorPoint;
+import com.jmd.model.geo.Polygon;
 import com.jmd.ui.frame.download.config.DownloadConfigFrame;
 import com.jmd.util.GeoUtils;
 import com.jmd.web.service.WebSubmitService;

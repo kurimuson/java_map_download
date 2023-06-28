@@ -10,10 +10,10 @@ import com.jmd.db.dao.CityDao;
 import com.jmd.db.dao.DistrictDao;
 import com.jmd.db.dao.ProvinceDao;
 import com.jmd.db.service.AllDistrictService;
-import com.jmd.entity.district.Area;
-import com.jmd.entity.district.City;
-import com.jmd.entity.district.District;
-import com.jmd.entity.district.Province;
+import com.jmd.model.district.Area;
+import com.jmd.model.district.City;
+import com.jmd.model.district.District;
+import com.jmd.model.district.Province;
 
 @Service
 public class AllDistrictServiceImpl implements AllDistrictService {

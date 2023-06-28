@@ -43,7 +43,7 @@ export class MapBase {
 	constructor(
 		private dom: HTMLDivElement,
 		private mapSource: MapSource,
-		private callback: { onFinish?: Function, onResize?: Function }
+		private callback: { onFinish?: Function, onResize?: Function },
 	) {
 		this.initMap(callback).then((e) => {
 			callback.onFinish && callback.onFinish(e);

@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>更换Key</h1>
+<div mat-dialog-content>
+	<mat-form-field class="input">
+		<mat-label>请输入你的Key</mat-label>
+		<input matInput [formControl]="key">
+		<mat-error *ngIf="key.invalid">
+			{{ getErrorMessage() }}
+		</mat-error>
+	</mat-form-field>
+</div>
+<div mat-dialog-actions [align]="'end'">
+	<button mat-button (click)="submit()">完成</button>
+	<button mat-button mat-dialog-close>取消</button>
+</div>

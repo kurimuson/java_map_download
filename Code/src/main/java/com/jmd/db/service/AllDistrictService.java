@@ -2,10 +2,10 @@ package com.jmd.db.service;
 
 import java.util.List;
 
-import com.jmd.entity.district.Area;
-import com.jmd.entity.district.City;
-import com.jmd.entity.district.District;
-import com.jmd.entity.district.Province;
+import com.jmd.model.district.Area;
+import com.jmd.model.district.City;
+import com.jmd.model.district.District;
+import com.jmd.model.district.Province;
 
 public interface AllDistrictService {
 

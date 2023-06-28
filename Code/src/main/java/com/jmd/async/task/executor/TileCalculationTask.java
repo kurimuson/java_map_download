@@ -7,9 +7,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
-import com.jmd.entity.geo.Polygon;
-import com.jmd.entity.geo.Tile;
-import com.jmd.entity.task.TaskBlockEntity;
+import com.jmd.model.geo.Polygon;
+import com.jmd.model.task.TaskBlockEntity;
 import com.jmd.util.GeoUtils;
 
 @Component

@@ -1,6 +1,6 @@
 package com.jmd.callback;
 
-import com.jmd.entity.task.TaskProgressEntity;
+import com.jmd.model.task.TaskProgressEntity;
 
 public interface DownloadMonitoringCallback {
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jmd.entity.district.District;
+import com.jmd.model.district.District;
 
 @Mapper
 public interface DistrictDao {

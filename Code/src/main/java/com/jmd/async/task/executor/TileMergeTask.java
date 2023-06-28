@@ -3,14 +3,15 @@ package com.jmd.async.task.executor;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import com.jmd.util.MyFileUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import com.jmd.common.StaticVar;
-import com.jmd.entity.geo.Polygon;
-import com.jmd.entity.result.ImageMergeAsyncTaskResult;
-import com.jmd.taskfunc.TileMergeMatWrap;
+import com.jmd.model.geo.Polygon;
+import com.jmd.model.result.ImageMergeAsyncTaskResult;
+import com.jmd.task.TileMergeMatWrap;
 import com.jmd.util.GeoUtils;
 import com.jmd.util.TaskUtils;
 
@@ -54,7 +55,7 @@ public class TileMergeTask {
                         break;
                     }
                 }
-                mat.mergeToMat(filePathAndName, positionX, positionY, isInFlag);
+                mat.mergeToMat(MyFileUtils.checkFilePath(filePathAndName), positionX, positionY, isInFlag);
             }
         }
         return new AsyncResult<>(result);

@@ -1,6 +1,7 @@
 package com.jmd.http;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.HashMap;
@@ -11,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import com.jmd.entity.config.HttpClientConfigEntity;
 
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
@@ -30,6 +29,15 @@ public class HttpClient {
 
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final MediaType XML = MediaType.parse("application/xml; charset=utf-8");
+    public static HashMap<String, String> HEADERS = new HashMap<>() {
+
+        @Serial
+        private static final long serialVersionUID = 9078863629526057150L;
+
+        {
+            put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.57");
+        }
+    };
 
     @Value("${okhttp.connect-timeout}")
     private int connectTimeout;
@@ -59,13 +67,17 @@ public class HttpClient {
         okHttpClient = clientBuilder.build();
     }
 
-    public String rebuild(HttpClientConfigEntity config) {
+    public String rebuild() {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
-        clientBuilder.connectTimeout(config.getConnectTimeout(), TimeUnit.MILLISECONDS);
-        clientBuilder.readTimeout(config.getReadTimeout(), TimeUnit.MILLISECONDS);
-        clientBuilder.writeTimeout(config.getWriteTimeout(), TimeUnit.MILLISECONDS);
-        clientBuilder.connectionPool(new ConnectionPool(config.getMaxIdleConnections(), config.getKeepAliveDuration(),
-                TimeUnit.MILLISECONDS));
+        // 连接超时
+        clientBuilder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
+        // 读取超时
+        clientBuilder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
+        // 写入超时
+        clientBuilder.writeTimeout(writeTimeout, TimeUnit.MILLISECONDS);
+        // 连接池
+        clientBuilder.connectionPool(new ConnectionPool(maxIdleConnections, keepAliveDuration, TimeUnit.MILLISECONDS));
+        // 代理
         if (ProxySetting.enable) {
             try {
                 clientBuilder.proxy(
@@ -74,6 +86,7 @@ public class HttpClient {
                 return "请输入正确的代理参数";
             }
         }
+        // 创建
         okHttpClient = clientBuilder.build();
         return "success";
     }
@@ -199,7 +212,8 @@ public class HttpClient {
                 assert response.body() != null;
                 buf = response.body().bytes();
             }
-        } catch (IOException ignored) {
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (response != null) {
                 response.close();

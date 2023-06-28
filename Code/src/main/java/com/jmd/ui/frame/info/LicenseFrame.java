@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import javax.swing.*;
 
 import com.jmd.ui.common.CommonSubFrame;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import com.jmd.common.StaticVar;
@@ -20,8 +19,7 @@ public class LicenseFrame extends CommonSubFrame {
     @Serial
     private static final long serialVersionUID = -1256751005617221216L;
 
-    @PostConstruct
-    private void init() {
+    public LicenseFrame() {
 
         var titleLabel = new JLabel("使用GPL-2.0开源许可协议");
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);

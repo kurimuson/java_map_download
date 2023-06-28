@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.jmd.entity.theme.ThemeEntity;
+import com.jmd.model.theme.ThemeEntity;
 import com.jmd.util.CommonUtils;
 import com.jmd.util.FontUtils;
 
@@ -27,6 +27,13 @@ public class StaticVar {
     public static final Font ICON_FONT_ICOMOON_18 = FontUtils.getIconFont("IcoMoon.ttf", 18);
     public static final Font ICON_FONT_ZONDICONS_18 = FontUtils.getIconFont("Zondicons.ttf", 18);
     public static final Font ICON_FONT_BRANDS_28 = FontUtils.getIconFont("Brands.ttf", 28);
+
+    public static final String[] PATH_STYLE = new String[]{
+            "/{z}/{x}/{y}/x={x}&y={y}&z={z}.[image]",
+            "/{z}/{x}/{y}/tile.[image]",
+            "/{z}/{y}/{x}.[image]",
+            "/{z}/{x}/{y}.[image]"
+    };
 
     public static final int TILE_WIDTH = 256;
     public static final int TILE_HEIGHT = 256;

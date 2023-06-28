@@ -1,10 +1,10 @@
 package com.jmd.async.task.scheduler;
 
 import com.jmd.callback.DownloadMonitoringCallback;
-import com.jmd.entity.task.TaskAllInfoEntity;
-import com.jmd.entity.task.TaskBlockEntity;
-import com.jmd.entity.task.TaskInstEntity;
-import com.jmd.entity.task.TaskProgressEntity;
+import com.jmd.model.task.TaskAllInfoEntity;
+import com.jmd.model.task.TaskBlockEntity;
+import com.jmd.model.task.TaskInstEntity;
+import com.jmd.model.task.TaskProgressEntity;
 
 public class DownloadMonitoringInterval implements Runnable {
 

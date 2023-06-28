@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jmd.db.dao.AreaDao">
 
-    <resultMap id="areaResultMap" type="com.jmd.entity.district.Area">
+    <resultMap id="areaResultMap" type="com.jmd.model.district.Area">
         <result property="id" column="id"/>
         <result property="adcode" column="adcode"/>
         <result property="polyline" column="polyline"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.jmd.entity.district.Area">
+    <insert id="insert" parameterType="com.jmd.model.district.Area">
         INSERT INTO
         tb_area(adcode, polyline)
         VALUES (#{adcode}, #{polyline})

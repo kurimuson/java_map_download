@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jmd.db.dao.CityDao">
 
-    <resultMap id="cityResultMap" type="com.jmd.entity.district.City">
+    <resultMap id="cityResultMap" type="com.jmd.model.district.City">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="center" column="center"/>

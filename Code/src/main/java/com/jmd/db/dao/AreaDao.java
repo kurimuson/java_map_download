@@ -2,7 +2,7 @@ package com.jmd.db.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.jmd.entity.district.Area;
+import com.jmd.model.district.Area;
 
 @Mapper
 public interface AreaDao {

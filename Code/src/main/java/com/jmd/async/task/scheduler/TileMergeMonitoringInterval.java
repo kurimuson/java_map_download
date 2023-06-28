@@ -1,8 +1,8 @@
 package com.jmd.async.task.scheduler;
 
 import com.jmd.callback.TileMergeMonitoringCallback;
-import com.jmd.entity.task.MergeProgressEntity;
-import com.jmd.taskfunc.TileMergeMatWrap;
+import com.jmd.model.task.MergeProgressEntity;
+import com.jmd.task.TileMergeMatWrap;
 
 public class TileMergeMonitoringInterval implements Runnable {
 

@@ -1,26 +1,27 @@
 package com.jmd;
 
-import java.io.PrintStream;
-
 import javax.swing.*;
 
+import com.jmd.browser.core.ChromiumEmbeddedCore;
 import com.jmd.common.StaticVar;
-import com.jmd.rx.callback.OnSubscribeCallback;
+import com.jmd.rx.Topic;
+import com.jmd.rx.service.InnerMqService;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import lombok.Setter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.jmd.ui.StartupWindow;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import lombok.Getter;
+import java.io.PrintStream;
 
 @SpringBootApplication
 public class Application {
 
-    @Getter
-    private static boolean startFinish = false;
+    public static boolean isStartComplete = false;
+    private static ConfigurableApplicationContext context;
+    private static final InnerMqService innerMqService = InnerMqService.getInstance();
     private static final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     static {
@@ -29,13 +30,11 @@ public class Application {
         } else if (StaticVar.IS_Mac) {
             System.setProperty("sun.java2d.metal", "true");
         }
-        System.loadLibrary(org.opencv.core.Core.NATIVE_LIBRARY_NAME);
+        System.load(System.getProperty("user.dir") + "/native/opencv_java470.dll");
     }
 
     public static void main(String[] args) {
 
-        // Print
-        Application.print();
         // 加载界面主题
         try {
             UIManager.setLookAndFeel(ApplicationSetting.getSetting().getThemeClazz());
@@ -43,7 +42,10 @@ public class Application {
             e.printStackTrace();
         }
         // 加载启动界面
-        SwingUtilities.invokeLater(() -> StartupWindow.getInstance().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            ApplicationTray.addSystemTray();
+            StartupWindow.getInstance().setVisible(true);
+        });
         compositeDisposable.add(ProgressBeanPostProcessor.observe().subscribe((result) -> {
             // 监听SpringBoot启动进度
             SwingUtilities.invokeLater(() -> {
@@ -63,18 +65,24 @@ public class Application {
                     e1.printStackTrace();
                 }
                 compositeDisposable.dispose();
-                startFinish = true;
+                isStartComplete = true;
+                innerMqService.pub(Topic.APPLICATION_START_FINISH, true);
             }).start();
         }));
         // 重定向至ConsoleTextArea
-        JTextAreaOutputStream out = new JTextAreaOutputStream(ApplicationStore.consoleTextArea);
+        var out = new ApplicationOutputStream(ApplicationStore.consoleTextArea);
         System.setOut(new PrintStream(out)); // 设置输出重定向
         System.setErr(new PrintStream(out)); // 将错误输出也重定向,用于e.printStackTrace
-        // 异步启动SpringBoot核心
+        // Print
+        Application.print();
+        // 异步
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() {
-                SpringApplication.run(Application.class, args);
+                // 实例化浏览器内核
+                ChromiumEmbeddedCore.Companion.getInstance();
+                // 启动SpringBoot核心
+                context = SpringApplication.run(Application.class, args);
                 return null;
             }
         }.execute();
@@ -86,6 +94,16 @@ public class Application {
         System.out.println("User OS: " + System.getProperty("os.name"));
         System.out.println("Java Name: " + System.getProperty("java.vm.name"));
         System.out.println("Java Version: " + System.getProperty("java.vm.version"));
+    }
+
+    public static void exit() {
+        ChromiumEmbeddedCore.Companion.getInstance().dispose();
+        if (context != null) {
+            var exitCode = SpringApplication.exit(context, () -> 0);
+            System.exit(exitCode);
+        } else {
+            System.exit(0);
+        }
     }
 
 }

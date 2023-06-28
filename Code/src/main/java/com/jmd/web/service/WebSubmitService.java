@@ -1,6 +1,6 @@
 package com.jmd.web.service;
 
-import com.jmd.entity.controller.WebDownloadSubmitVo;
+import com.jmd.model.controller.WebDownloadSubmitVo;
 
 public interface WebSubmitService {
 	

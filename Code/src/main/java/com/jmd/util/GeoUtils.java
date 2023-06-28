@@ -3,11 +3,11 @@ package com.jmd.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jmd.entity.geo.Bound;
-import com.jmd.entity.geo.LngLatPoint;
-import com.jmd.entity.geo.MercatorPoint;
-import com.jmd.entity.geo.Polygon;
-import com.jmd.entity.geo.Tile;
+import com.jmd.model.geo.Bound;
+import com.jmd.model.geo.LngLatPoint;
+import com.jmd.model.geo.MercatorPoint;
+import com.jmd.model.geo.Polygon;
+import com.jmd.model.geo.Tile;
 
 public class GeoUtils {
 

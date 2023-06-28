@@ -4,27 +4,28 @@ import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.io.Serial;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.*;
 
 import com.jmd.ui.common.CommonSubFrame;
+import com.jmd.util.MyFileUtils;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.jmd.common.StaticVar;
-import com.jmd.entity.geo.Polygon;
-import com.jmd.entity.task.TaskInstEntity;
-import com.jmd.taskfunc.TaskStepFunc;
+import com.jmd.model.geo.Polygon;
+import com.jmd.model.task.TaskInstEntity;
+import com.jmd.task.TaskStepFunc;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,77 +52,71 @@ public class DownloadPreviewFrame extends CommonSubFrame {
     private List<Integer> zoomList = null;
     private List<Polygon> polygons = null;
 
-    private JTextArea textArea;
-    private JComboBox<String> imgTypeComboBox;
-    private JLabel tileCountContentLabel;
-    private JLabel downloadAmountContentLabel;
-    private JLabel diskUsageContentLabel;
-    private JLabel loadingTitleLabel;
-    private JLabel loadingGifIconLabel;
+    private final JTextArea textArea;
+    private final JComboBox<String> imgTypeComboBox;
+    private final JLabel tileCountContentLabel;
+    private final JLabel downloadAmountContentLabel;
+    private final JLabel diskUsageContentLabel;
+    private final JLabel loadingTitleLabel;
+    private final JLabel loadingGifIconLabel;
 
-//	public DownloadPreviewFrame() {
-//		init();
-//	}
+    public DownloadPreviewFrame() throws IOException {
 
-    @PostConstruct
-    private void init() {
+        var scrollPane = new JScrollPane();
 
-        JScrollPane scrollPane = new JScrollPane();
-
-        textArea = new JTextArea();
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setLineWrap(true);
-        scrollPane.setViewportView(textArea);
+        this.textArea = new JTextArea();
+        this.textArea.setEditable(false);
+        this.textArea.setFocusable(false);
+        this.textArea.setLineWrap(true);
+        scrollPane.setViewportView(this.textArea);
 
         JPanel panel = new JPanel();
 
         JLabel imgTypeTitleLabel = new JLabel("图片格式：");
         imgTypeTitleLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        imgTypeComboBox = new JComboBox<>();
-        imgTypeComboBox.setFocusable(false);
-        imgTypeComboBox.setFont(StaticVar.FONT_SourceHanSansCNNormal_13);
-        imgTypeComboBox.setModel(new DefaultComboBoxModel<>(new String[]{"PNG", "WEBP", "JPG-低", "JPG-中", "JPG-高"}));
-        imgTypeComboBox.setSelectedIndex(0);
-        imgTypeComboBox.addItemListener((e) -> {
+        this.imgTypeComboBox = new JComboBox<>();
+        this.imgTypeComboBox.setFocusable(false);
+        this.imgTypeComboBox.setFont(StaticVar.FONT_SourceHanSansCNNormal_13);
+        this.imgTypeComboBox.setModel(new DefaultComboBoxModel<>(new String[]{"PNG", "WEBP", "JPG-低", "JPG-中", "JPG-高"}));
+        this.imgTypeComboBox.setSelectedIndex(0);
+        this.imgTypeComboBox.addItemListener((e) -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 changeImageType((String) e.getItem());
             }
         });
 
-        JLabel diskBlockSizeLabel = new JLabel("硬盘簇大小（以NTFS为例）：" + StaticVar.DISK_BLOCK + "字节");
+        var diskBlockSizeLabel = new JLabel("硬盘簇大小（以NTFS为例）：" + StaticVar.DISK_BLOCK + "字节");
         diskBlockSizeLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        JLabel tileCountTitleLabel = new JLabel("瓦片图下载总数：");
+        var tileCountTitleLabel = new JLabel("瓦片图下载总数：");
         tileCountTitleLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        tileCountContentLabel = new JLabel("正在计算...");
-        tileCountContentLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
+        this.tileCountContentLabel = new JLabel("正在计算...");
+        this.tileCountContentLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        JLabel downloadAmountTitleLabel = new JLabel("预计下载总量：");
+        var downloadAmountTitleLabel = new JLabel("预计下载总量：");
         downloadAmountTitleLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        downloadAmountContentLabel = new JLabel("正在计算...");
-        downloadAmountContentLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
+        this.downloadAmountContentLabel = new JLabel("正在计算...");
+        this.downloadAmountContentLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        JLabel diskUsageTitleLabel = new JLabel("预计硬盘占用：");
+        var diskUsageTitleLabel = new JLabel("预计硬盘占用：");
         diskUsageTitleLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        diskUsageContentLabel = new JLabel("正在计算...");
-        diskUsageContentLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
+        this.diskUsageContentLabel = new JLabel("正在计算...");
+        this.diskUsageContentLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
 
-        loadingTitleLabel = new JLabel("正在计算...");
-        loadingTitleLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
-        loadingTitleLabel.setVisible(false);
+        this.loadingTitleLabel = new JLabel("正在计算...");
+        this.loadingTitleLabel.setFont(StaticVar.FONT_SourceHanSansCNNormal_14);
+        this.loadingTitleLabel.setVisible(false);
 
-        loadingGifIconLabel = new JLabel("");
-        loadingGifIconLabel
-                .setIcon(new ImageIcon(Objects.requireNonNull(DownloadPreviewFrame.class.getResource("/com/jmd/assets/icon/loading.gif"))));
-        loadingGifIconLabel.setVisible(false);
+        this.loadingGifIconLabel = new JLabel();
+        this.loadingGifIconLabel.setIcon(new ImageIcon(MyFileUtils.getResourceFileBytes("assets/icon/loading.gif")));
+        this.loadingGifIconLabel.setVisible(false);
 
         // Right panel layout
-        GroupLayout gl_panel = new GroupLayout(panel);
+        var gl_panel = new GroupLayout(panel);
         gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
                 .createSequentialGroup().addContainerGap()
                 .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
@@ -129,13 +124,13 @@ public class DownloadPreviewFrame extends CommonSubFrame {
                                 .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
                                         .addGroup(gl_panel.createSequentialGroup().addComponent(imgTypeTitleLabel)
                                                 .addPreferredGap(ComponentPlacement.RELATED).addComponent(
-                                                        imgTypeComboBox, GroupLayout.PREFERRED_SIZE,
+                                                        this.imgTypeComboBox, GroupLayout.PREFERRED_SIZE,
                                                         GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(gl_panel.createSequentialGroup()
-                                                .addComponent(loadingGifIconLabel, GroupLayout.PREFERRED_SIZE, 32,
+                                                .addComponent(this.loadingGifIconLabel, GroupLayout.PREFERRED_SIZE, 32,
                                                         GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                                .addComponent(loadingTitleLabel, GroupLayout.DEFAULT_SIZE,
+                                                .addComponent(this.loadingTitleLabel, GroupLayout.DEFAULT_SIZE,
                                                         GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addGap(6))
                                         .addComponent(diskBlockSizeLabel))
@@ -143,42 +138,42 @@ public class DownloadPreviewFrame extends CommonSubFrame {
                         .addGroup(
                                 gl_panel.createSequentialGroup().addComponent(tileCountTitleLabel)
                                         .addPreferredGap(ComponentPlacement.RELATED)
-                                        .addComponent(tileCountContentLabel, GroupLayout.DEFAULT_SIZE, 160,
+                                        .addComponent(this.tileCountContentLabel, GroupLayout.DEFAULT_SIZE, 160,
                                                 Short.MAX_VALUE)
                                         .addContainerGap())
                         .addGroup(gl_panel.createSequentialGroup().addComponent(downloadAmountTitleLabel)
                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(downloadAmountContentLabel, GroupLayout.DEFAULT_SIZE, 174,
+                                .addComponent(this.downloadAmountContentLabel, GroupLayout.DEFAULT_SIZE, 174,
                                         Short.MAX_VALUE)
                                 .addContainerGap())
                         .addGroup(gl_panel.createSequentialGroup().addComponent(diskUsageTitleLabel)
                                 .addPreferredGap(ComponentPlacement.RELATED)
-                                .addComponent(diskUsageContentLabel, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                                .addComponent(this.diskUsageContentLabel, GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
                                 .addContainerGap()))));
         gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING).addGroup(gl_panel
                 .createSequentialGroup().addContainerGap()
                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(imgTypeTitleLabel).addComponent(
-                        imgTypeComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
+                        this.imgTypeComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
                         GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(ComponentPlacement.RELATED).addComponent(diskBlockSizeLabel)
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(tileCountTitleLabel)
-                        .addComponent(tileCountContentLabel))
+                        .addComponent(this.tileCountContentLabel))
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(downloadAmountTitleLabel)
-                        .addComponent(downloadAmountContentLabel))
+                        .addComponent(this.downloadAmountContentLabel))
                 .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(diskUsageTitleLabel)
-                        .addComponent(diskUsageContentLabel))
+                        .addComponent(this.diskUsageContentLabel))
                 .addPreferredGap(ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
                 .addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-                        .addComponent(loadingTitleLabel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(loadingGifIconLabel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(this.loadingTitleLabel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(this.loadingGifIconLabel, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap()));
         panel.setLayout(gl_panel);
 
         // This frame layout
-        GroupLayout groupLayout = new GroupLayout(getContentPane());
+        var groupLayout = new GroupLayout(getContentPane());
         groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
                 .addGroup(groupLayout.createSequentialGroup()
                         .addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 330, GroupLayout.PREFERRED_SIZE)
@@ -203,6 +198,11 @@ public class DownloadPreviewFrame extends CommonSubFrame {
                 }
             }
         });
+
+    }
+
+    @PostConstruct
+    private void init() {
 
     }
 
